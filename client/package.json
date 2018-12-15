@@ -1,0 +1,28 @@
+{
+  "name": "fabric-medrecord",
+  "version": "1.0.0",
+  "description": "Hyperledger Fabric Medical Record Application",
+  "main": "medrecord.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyperledger/fabric-sdk-node.git"
+  },
+  "keywords": [
+    "Hyperledger",
+    "Fabric"
+  ],
+  "author": "Sisdis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hyperledger/fabric-sdk-node/issues"
+  },
+  "homepage": "https://github.com/hyperledger/fabric-sdk-node#readme",
+  "dependencies": {
+    "fabric-ca-client": "^1.3.0",
+    "fabric-client": "^1.3.0",
+    "grpc": "^1.16.1"
+  }
+}
