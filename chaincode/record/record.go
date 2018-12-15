@@ -33,21 +33,21 @@ func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	function, args := stub.GetFunctionAndParameters()
 
 	if function == "addSession" {
-
+		return AddSession(stub, args)
 	} else if function == "queryByNIK" {
-
+		return QueryByNIK(stub, args)
 	} else if function == "seed" {
-
+		return Seed(stub)
 	}
 
 	return shim.Error("Invalid contact function name.")
 }
 
-func (s *SmartContract) AddSession(stub shim.ChaincodeStubInterface) pb.Response {
+func (s *SmartContract) AddSession(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	return shim.Success(nil)
 }
 
-func (s *SmartContract) QueryByNIK(stub shim.ChaincodeStubInterface) pb.Response {
+func (s *SmartContract) QueryByNIK(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	return shim.Success(nil)
 }
 
