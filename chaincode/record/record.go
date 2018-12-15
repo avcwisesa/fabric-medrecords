@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
@@ -17,10 +18,12 @@ type Session struct {
 	NIP string `json:"nip"`
 	Treatment string `json:"treatment"`
 	Medication string `json:"medication"`
+	Datetime time.Time `json:"datetime"`
 }
 
 type MedicalRecord struct {
 	NIK string `json:"nik"`
+	Name string `json:"name"`
 	Record []Session `json:"session"`
 }
 
@@ -44,14 +47,67 @@ func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 }
 
 func (s *SmartContract) AddSession(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+
+	if len(args) != 4 {
+		return shim.Error("Incorrect number of arguments. Expecting 4")
+	}
+
+	patientBytes, _ := stub.GetState(args[0])
+	patient := MedicalRecord{}
+
+	json.Unmarshal(patientBytes, &patient)
+
+	session := Session{
+		NIP: args[1],
+		Treatment: args[2],
+		Medication: args[3],
+		Datetime: time.Now()
+	}
+
+	patient.Record = append(patient.Record, session)
+
+	patientBytes, _ := json.Marshal(patient)
+	stub.PutState(args[0], patient)
+
 	return shim.Success(nil)
 }
 
 func (s *SmartContract) QueryByNIK(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	return shim.Success(nil)
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	patientBytes, _ := stub.GetState(args[0])
+
+	return shim.Success(patientBytes)
 }
 
 func (s *SmartContract) Seed(stub shim.ChaincodeStubInterface) pb.Response {
+
+	session1 := Session{
+		NIP: "123",
+		Treatment: "Totok hidung",
+		Medication: "-",
+		Datetime: time.Now()
+	}
+
+	session2 := Session{
+		NIP: "456",
+		Treatment: "-",
+		Medication: "Jamu kuat",
+		Datetime: time.Now()
+	}
+
+	patient0 := MedicalRecord{
+		NIK: "1234567890",
+		Name: "Harry A. A. Munir"
+	}
+
+	patient0.Record = [session1, session2]
+
+	stub.PutState("1234567890", patient0)
+
 	return shim.Success(nil)
 }
 
