@@ -1,1 +1,6 @@
 client/node_modules
+
+architecture/crypto-config
+architecture/channel-artifacts
+architecture/docker-compose.yml
+

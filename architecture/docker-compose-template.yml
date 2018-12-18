@@ -40,9 +40,10 @@ services:
     ports:
       - 7050:7050
     volumes:
-        - ./config/:/etc/hyperledger/configtx
-        - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.medrecord.com/:/etc/hyperledger/msp/orderer
+        - ./channel-artifacts/:/etc/hyperledger/configtx
+        - ./crypto-config/ordererOrganizations/medrecord.com/orderers/orderer.medrecord.com/:/etc/hyperledger/msp/orderer
         - ./crypto-config/peerOrganizations/org1.medrecord.com/peers/peer0.org1.medrecord.com/:/etc/hyperledger/msp/peerOrg1
+        - ./crypto-config/ordererOrganizations/medrecord.com/orderers/orderer.medrecord.com/msp:/var/hyperledger/orderer/msp
     networks:
       - basic
 
@@ -78,7 +79,7 @@ services:
         - /var/run/:/host/var/run/
         - ./crypto-config/peerOrganizations/org1.medrecord.com/peers/peer0.org1.medrecord.com/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/org1.medrecord.com/users:/etc/hyperledger/msp/users
-        - ./config:/etc/hyperledger/configtx
+        - ./channel-artifacts:/etc/hyperledger/configtx
     depends_on:
       - orderer.medrecord.com
       - couchdb
@@ -98,8 +99,8 @@ services:
     networks:
       - basic
 
-  cli:
-    container_name: cli
+  mr-cli:
+    container_name: mr-cli
     image: hyperledger/fabric-tools
     tty: true
     environment:
