@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -15,15 +12,15 @@ type SmartContract struct {
 }
 
 type Session struct {
-	NIP string `json:"nip"`
-	Treatment string `json:"treatment"`
-	Medication string `json:"medication"`
-	Datetime time.Time `json:"datetime"`
+	NIP        string    `json:"nip"`
+	Treatment  string    `json:"treatment"`
+	Medication string    `json:"medication"`
+	Datetime   time.Time `json:"datetime"`
 }
 
 type MedicalRecord struct {
-	NIK string `json:"nik"`
-	Name string `json:"name"`
+	NIK    string    `json:"nik"`
+	Name   string    `json:"name"`
 	Record []Session `json:"session"`
 }
 
@@ -36,11 +33,11 @@ func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	function, args := stub.GetFunctionAndParameters()
 
 	if function == "addSession" {
-		return AddSession(stub, args)
+		return s.AddSession(stub, args)
 	} else if function == "queryByNIK" {
-		return QueryByNIK(stub, args)
+		return s.QueryByNIK(stub, args)
 	} else if function == "seed" {
-		return Seed(stub)
+		return s.Seed(stub)
 	}
 
 	return shim.Error("Invalid contact function name.")
@@ -58,16 +55,16 @@ func (s *SmartContract) AddSession(stub shim.ChaincodeStubInterface, args []stri
 	json.Unmarshal(patientBytes, &patient)
 
 	session := Session{
-		NIP: args[1],
-		Treatment: args[2],
+		NIP:        args[1],
+		Treatment:  args[2],
 		Medication: args[3],
-		Datetime: time.Now()
+		Datetime:   time.Now(),
 	}
 
 	patient.Record = append(patient.Record, session)
 
-	patientBytes, _ := json.Marshal(patient)
-	stub.PutState(args[0], patient)
+	patientBytes, _ = json.Marshal(patient)
+	stub.PutState(args[0], patientBytes)
 
 	return shim.Success(nil)
 }
@@ -102,29 +99,28 @@ func (s *SmartContract) QueryByNIK(stub shim.ChaincodeStubInterface, args []stri
 func (s *SmartContract) Seed(stub shim.ChaincodeStubInterface) pb.Response {
 
 	session1 := Session{
-		NIP: "123",
-		Treatment: "Totok hidung",
+		NIP:        "123",
+		Treatment:  "Totok hidung",
 		Medication: "-",
-		Datetime: time.Now()
+		Datetime:   time.Now(),
 	}
 
 	session2 := Session{
-		NIP: "456",
-		Treatment: "-",
+		NIP:        "456",
+		Treatment:  "-",
 		Medication: "Jamu kuat",
-		Datetime: time.Now()
+		Datetime:   time.Now(),
 	}
 
 	patient0 := MedicalRecord{
-		NIK: "1234567890",
-		Name: "Harry A. A. Munir"
+		NIK:  "1234567890",
+		Name: "Harry A. A. Munir",
 	}
 
-	patient0.Record = [session1, session2]
+	patient0.Record = []Session{session1, session2}
 
-	stub.PutState("1234567890", patient0)
+	patient0JSON, _ := json.Marshal(patient0)
+	stub.PutState("1234567890", patient0JSON)
 
 	return shim.Success(nil)
 }
-
-
