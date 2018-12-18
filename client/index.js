@@ -5,6 +5,8 @@ const { prompt } = require('inquirer');
 
 const { query } = require('./query');
 const { invoke } = require('./invoke');
+const { enroll } = require('./enrollAdmin');
+const { register } = require('./registerUser');
 
 program
   .version('0.0.1')
@@ -77,6 +79,48 @@ program
       message : 'Masukkan NIK ...'
     }]).then(answers =>
       query('queryByNIK', 'user4', answers.nik));
+  });
+
+program
+  .command('enrollAdmin')
+  .alias('ea')
+  .description('Enroll Admin')
+  .action(() => {
+    prompt([
+        {
+            type : 'input',
+            name : 'enrollmentID',
+            message : 'Masukkan enrollmentID ...'
+        },{
+            type : 'input',
+            name : 'secret',
+            message : 'Masukkan Secret Password ...'
+        },{
+            type : 'input',
+            name : 'mspid',
+            message : 'Masukkan mspid ...'
+        },
+    ]).then(answers =>
+      enroll(answers.enrollmentID, answers.secret, answers.mspid));
+  });
+
+program
+  .command('registerUser')
+  .alias('ru')
+  .description('Register new user')
+  .action(() => {
+    prompt([ 
+        {
+            type : 'input',
+            name : 'enrollmentID',
+            message : 'Masukkan enrollmentID ...'
+        },{
+            type : 'input',
+            name : 'mspid',
+            message : 'Masukkan mspid ...'
+        },
+    ]).then(answers =>
+      register(answers.enrollmentID, answers.mspid));
   });
 
 program.parse(process.argv);
