@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -107,4 +108,13 @@ func (s *SmartContract) Seed(stub shim.ChaincodeStubInterface) pb.Response {
 	stub.PutState("1234567890", patient0JSON)
 
 	return shim.Success(nil)
+}
+
+func main() {
+
+	// Create a new Smart Contract
+	err := shim.Start(new(SmartContract))
+	if err != nil {
+		fmt.Printf("Error creating new Smart Contract: %s", err)
+	}
 }
