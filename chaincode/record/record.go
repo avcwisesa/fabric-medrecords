@@ -35,13 +35,15 @@ func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	if function == "addSession" {
 		return s.AddSession(stub, args)
+	} else if function == "addPatient" {
+		return s.AddPatient(stub, args)
 	} else if function == "queryByNIK" {
 		return s.QueryByNIK(stub, args)
 	} else if function == "seed" {
 		return s.Seed(stub)
 	}
 
-	return shim.Error("Invalid contact function name.")
+	return shim.Error("Invalid contract function name." + function)
 }
 
 func (s *SmartContract) AddSession(stub shim.ChaincodeStubInterface, args []string) pb.Response {
@@ -81,8 +83,8 @@ func (s *SmartContract) AddPatient(stub shim.ChaincodeStubInterface, args []stri
 		Name: args[1],
 	}
 
-	patientBytes, _ = json.Marshal(patient)
-	stub.PutState(args[0], patient)
+	patientBytes, _ := json.Marshal(patient)
+	stub.PutState(args[0], patientBytes)
 
 	return shim.Success(nil)
 }
