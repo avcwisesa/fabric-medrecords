@@ -76,10 +76,11 @@ func (s *SmartContract) AddPatient(stub shim.ChaincodeStubInterface, args []stri
 	}
 
 	patient := MedicalRecord{
-		NIK: args[0],
-		Name: args[1]
+		NIK:  args[0],
+		Name: args[1],
 	}
 
+	patientBytes, _ = json.Marshal(patient)
 	stub.PutState(args[0], patient)
 
 	return shim.Success(nil)
