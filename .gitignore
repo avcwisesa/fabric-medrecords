@@ -1,4 +1,5 @@
 client/node_modules
+client/hfc-key-store
 
 architecture/crypto-config
 architecture/channel-artifacts
