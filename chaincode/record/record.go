@@ -72,6 +72,22 @@ func (s *SmartContract) AddSession(stub shim.ChaincodeStubInterface, args []stri
 	return shim.Success(nil)
 }
 
+func (s *SmartContract) AddPatient(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 4")
+	}
+
+	patient := MedicalRecord{
+		NIK: args[0],
+		Name: args[1]
+	}
+
+	stub.PutState(args[0], patient)
+
+	return shim.Success(nil)
+}
+
 func (s *SmartContract) QueryByNIK(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 1 {
