@@ -11,6 +11,7 @@
 set -e
 
 CHANNEL_NAME="medchannel"
+COMPOSE_PROJECT_NAME="network"
 
 # Generates Org certs using cryptogen tool
 function generateCerts() {
@@ -102,7 +103,7 @@ function replacePrivateKey() {
 export MSYS_NO_PATHCONV=1
 starttime=$(date +%s)
 LANGUAGE=${1:-"golang"}
-CC_SRC_PATH=/opt/gopath/src/github.com/record
+CC_SRC_PATH=github.com/record
 
 # Clean the keystore
 rm -rf ./hfc-key-store
@@ -126,11 +127,11 @@ sleep ${FABRIC_START_TIMEOUT}
 docker-compose -f docker-compose.yml up -d couchdb
 
 # Create the channel
-#docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.medrecord.com/msp" peer0.org1.medrecord.com peer channel create -o orderer.medrecord.com:7050 -c medchannel -f /etc/hyperledger/configtx/channel.tx
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.medrecord.com/msp" peer0.org1.medrecord.com peer channel create -o orderer.medrecord.com:7050 -c medchannel -f /etc/hyperledger/configtx/channel.tx
 # Join peer0.org1.medrecord.com to the channel.
-#docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.medrecord.com/msp" peer0.org1.medrecord.com peer channel join -b medchannel.block
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.medrecord.com/msp" peer0.org1.medrecord.com peer channel join -b medchannel.block
 
-#docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.medrecord.com/users/Admin@org1.medrecord.com/msp" cli peer chaincode install -n record -v 1.0 -p "$CC_SRC_PATH" -l "$LANGUAGE"
-#docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.medrecord.com/users/Admin@org1.medrecord.com/msp" cli peer chaincode instantiate -o orderer.medrecord.com:7050 -C medchannel -n record -l "$LANGUAGE" -v 1.0 -c '{"Args":[""]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
-#sleep 10
-#docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.medrecord.com/users/Admin@org1.medrecord.com/msp" cli peer chaincode invoke -o orderer.medrecord.com:7050 -C medchannel -n record -c '{"function":"seed","Args":[""]}'
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.medrecord.com/users/Admin@org1.medrecord.com/msp" mr-cli peer chaincode install -n record -v 1.0 -p "$CC_SRC_PATH" -l "$LANGUAGE"
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.medrecord.com/users/Admin@org1.medrecord.com/msp" mr-cli peer chaincode instantiate -o orderer.medrecord.com:7050 -C medchannel -n record -l "$LANGUAGE" -v 1.0 -c '{"Args":[""]}' -P "OR ('Org1MSP.member','Org2MSP.member')"
+sleep 1
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.medrecord.com/users/Admin@org1.medrecord.com/msp" mr-cli peer chaincode invoke -o orderer.medrecord.com:7050 -C medchannel -n record -c '{"function":"seed","Args":[""]}'

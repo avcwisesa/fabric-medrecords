@@ -41,7 +41,7 @@ program
   .action(() => {
     prompt(addSessionQuestions).then(answers => {
       var args = [answers.nik, answers.nip, answers.treatment, answers.medication];
-      invoke('addSession', 'user4', args);
+      invoke('addSession', 'user1', args);
     })
   });
 
@@ -65,7 +65,7 @@ program
   .action(() => {
     prompt(patientQuestions).then(answers => {
       var args = [answers.nik, answers.name];
-      invoke('addPatient', 'user4', args);})
+      invoke('addPatient', 'user1', args);})
   });
 
 program
@@ -78,7 +78,7 @@ program
       name : 'nik',
       message : 'Masukkan NIK ...'
     }]).then(answers =>
-      query('queryByNIK', 'user4', answers.nik));
+      query('queryByNIK', 'user1', answers.nik));
   });
 
 program

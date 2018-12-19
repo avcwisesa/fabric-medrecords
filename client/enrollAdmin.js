@@ -40,7 +40,7 @@ function enroll(enrollmentID, secret, mspid) {
             verify: false
         };
         // be sure to change the http to https when the CA is running TLS enabled
-        fabric_ca_client = new Fabric_CA_Client('http://localhost:7054', tlsOptions , 'ca.example.com', crypto_suite);
+        fabric_ca_client = new Fabric_CA_Client('http://localhost:7054', tlsOptions , 'ca.medrecord.com', crypto_suite);
     
         // first check to see if the admin is already enrolled
         return fabric_client.getUserContext(enrollmentID, true);
@@ -55,7 +55,7 @@ function enroll(enrollmentID, secret, mspid) {
               enrollmentID: enrollmentID,
               enrollmentSecret: secret
             }).then((enrollment) => {
-              console.log('Successfully enrolled admin user "admin"');
+              console.log(`Successfully enrolled admin user ${enrollmentID}`);
               return fabric_client.createUser(
                   {username: enrollmentID,
                       mspid: mspid,

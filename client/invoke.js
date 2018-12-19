@@ -17,7 +17,7 @@ var os = require('os');
 var fabric_client = new Fabric_Client();
 
 // setup the fabric network
-var channel = fabric_client.newChannel('mychannel');
+var channel = fabric_client.newChannel('medchannel');
 var peer = fabric_client.newPeer('grpc://localhost:7051');
 channel.addPeer(peer);
 var order = fabric_client.newOrderer('grpc://localhost:7050')
@@ -62,10 +62,10 @@ function invoke(func, user, ...args) {
 		// must send the proposal to endorsing peers
 		var request = {
 			//targets: let default to the peer assigned to the client
-			chaincodeId: 'fabcar',
+			chaincodeId: 'record',
 			fcn: func,
 			args: args,
-			chainId: 'mychannel',
+			chainId: 'medchannel',
 			txId: tx_id
 		};
 	
