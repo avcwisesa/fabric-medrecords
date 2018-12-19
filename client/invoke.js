@@ -64,7 +64,7 @@ function invoke(func, user, ...args) {
 			//targets: let default to the peer assigned to the client
 			chaincodeId: 'record',
 			fcn: func,
-			args: args,
+			args: args[0],
 			chainId: 'medchannel',
 			txId: tx_id
 		};
